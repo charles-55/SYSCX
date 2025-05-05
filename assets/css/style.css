@@ -174,3 +174,7 @@ label img {
 	height: auto;
 	width: 50px;
 }
+
+#errorMsg {
+	color: #ff0000;
+}

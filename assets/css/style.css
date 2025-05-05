@@ -1,0 +1,176 @@
+h1,h2,h3,nav,footer,div {
+	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+}
+
+body {
+	background-color: #ffffff;
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+header,footer {
+	background-color: #4b4b4b;
+	color: white;
+}
+
+header h1 {
+	font-size: 32px;
+	font-weight: bold;
+	padding: 8px 0 0 20px;
+}
+
+header p {
+	font-size: 16px;
+	font-style: italic;
+	margin-bottom: 16px;
+	padding: 0 0 0 20px;
+}
+
+#content {
+	display: flex;
+	margin: 0px;
+	padding: 0px;
+}
+
+nav {
+	background-color: #e8e8e8;
+	margin-left: 3%;
+	width: 15%;
+}
+
+nav ul {
+	list-style-type: none;
+	text-align: center;
+}
+
+nav ul li {
+	padding: 5px 0px 5px 0px;
+}
+
+nav ul li a {
+	color: black;
+	text-decoration: none;
+}
+
+#selected_page {
+	background-color: #919191;
+}
+
+#selected_page a {
+	color: #f0f0f0;
+}
+
+main {
+	background-color: white;
+	padding-left: 1%;
+	padding-right: 1%;
+	width: 70%;
+}
+
+section {
+	padding-top: 10px;
+}
+
+section h2 {
+	background-color: #919191;
+	border: solid 1px black;
+	color: #f0f0f0;
+	font-size: 21.6px;
+	height: 27.2px;
+	margin-bottom: 5px;
+	padding: 5px 0;
+	text-transform: uppercase;
+	width: 100%;
+}
+
+legend {
+	background-color: #808080;
+	color: #ffffff;
+	font-size: 21.6px;
+	height: 27.2px;
+	margin: 0;
+	padding: 5px 0px;
+	text-transform: uppercase;
+	width: 100%;
+}
+
+legend span {
+	display: inline;
+	padding: 0px 0px 0px 15px;
+}
+
+fieldset {
+	background-color: #e8e8e8;
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+#newpost textarea {
+	height: 100px;
+	width: 500px;
+}
+
+#posts_section details {
+	border: 2px solid #e8e8e8;
+	border-radius: 5px;
+	margin-top: 10px;
+}
+
+#posts_section summary {
+	font-weight: bold;
+	padding: 5px;
+}
+
+#posts_section p {
+	color: #919191;
+	padding: 15px;
+}
+
+form p {
+	margin-left: 16px;
+	margin-top: 8px;
+	padding: 0px 0px 0px 5px;
+}
+
+form input,select {
+  	margin: 5px;
+}
+
+form input[type="submit"],input[type="reset"] {
+	font-size: medium;
+	margin: 10px 10px 10px 20px;
+	text-transform: capitalize;
+}
+
+label img {
+	border-radius: 50%;
+	height: 50px;
+	margin: 16px 0px;
+	vertical-align: middle;
+	width: 50px;
+}
+
+#user_info {
+	background-color: #e8e8e8;
+	margin-right: 3%;
+	text-align: center;
+	padding: 10px;
+	width: 15%;
+}
+
+#user_info img {
+	height: auto;
+	width: 75px;
+}
+
+#avatar_selection {
+	align-items: center;
+	display: flex;
+}
+
+#avatar_selection img {
+	border-radius: 100%;
+	height: auto;
+	width: 50px;
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Register on SYSCX</title>
+	<link rel="stylesheet" href="assets/css/reset.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+	<header>
+		<h1>SYSCX</h1>
+		<p>Social media for SYSC students in Carleton University</p>
+	</header>
+
+	<div id="content">
+		<nav>
+			<ul>
+				<li id="selected_page"><a href="index.html">Home</a></li>
+				<li><a href="profile.html">Profile</a></li>
+				<li><a href="register.html">Register</a></li>
+				<li><a href="#">Log out</a></li>
+			</ul>
+		</nav>
+
+		<main>
+			<section>
+				<h2>New Post</h2>
+				<form method="POST" action="https://ramisabouni.com/sysc4504/process_index.php">
+					<fieldset id="newpost">
+						<p>
+							<textarea name="new_post" placeholder="What is happening?! (max 200 characters)" maxlength="200"></textarea>
+						</p>
+
+                        <input type="submit" value="Post"/>
+                        <input type="reset" value="Reset"/>
+					</fieldset>
+				</form>
+
+				<div id="posts_section">
+					<details open>
+						<summary>Post 1</summary>
+						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio numquam quisquam cumque enim dolores nemo perferendis amet atque. Optio asperiores iusto voluptate corporis consequatur quia cum numquam cupiditate suscipit tempore?</p>
+					</details>
+					
+					<details open>
+						<summary>Post 2</summary>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit veniam dolorem vitae eveniet nisi a culpa corrupti ipsum, commodi deserunt, iste sequi alias nam harum nesciunt consequuntur beatae cupiditate aliquam.</p>
+					</details>
+					
+					<details open>
+						<summary>Post 3</summary>
+						<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa, itaque! Natus, dolor exercitationem non, nisi minus quos a similique quia assumenda placeat explicabo magni distinctio deserunt fugit animi id error.</p>
+					</details>
+					
+					<details open>
+						<summary>Post 4</summary>
+						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum hic facere mollitia incidunt consequuntur? Nisi possimus consequatur quos in blanditiis debitis, commodi ab laborum dolores provident voluptate porro, sunt tenetur?</p>
+					</details>
+				</div>
+			</section>
+		</main>
+
+		<div id="user_info">
+			<p>Osamudiamen Nwoko</p><br />
+
+			<p><img src="images/img_avatar1.png" alt="User Image" /></p><br />
+
+			<p>Email:</p>
+			<p><a href="mailto:osamudiamennwoko@cmail.carleton.ca">osamudiamennwoko@<br />cmail.carleton.ca</a></p><br />
+
+			<p>Program: </p>
+			<p>Software Engineering</p>
+		</div>
+	</div>
+</body>
+
+</html>

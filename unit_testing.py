@@ -173,7 +173,7 @@ def partial(lst: list[str], query: str):
 if __name__ == "__main__":
 
     # Files to be tested
-    file_names = ["osamudiamen_nwoko_a02.sql", "register.php",
+    file_names = ["osamudiamen_nwoko_a03.sql", "register.php",
                   "profile.php", "index.php"]
 
     # Update according to where your website is located

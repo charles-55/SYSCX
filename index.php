@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Register on SYSCX</title>
+	<title>Index on SYSCX</title>
 	<link rel="stylesheet" href="assets/css/reset.css">
 	<link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -18,9 +18,18 @@
 		<nav>
 			<ul>
 				<li id="selected_page"><a href="index.php">Home</a></li>
-				<li><a href="profile.php">Profile</a></li>
-				<li><a href="register.php">Register</a></li>
-				<li><a href="#">Log out</a></li>
+				<?php
+					session_start();
+					
+					if (isset($_SESSION["student_id"])) {
+						echo "<li><a href=\"profile.php\">Profile</a></li>";
+						if ($_SESSION["account_type"] === 0) { echo "<li><a href=\"user_list.php\">User List</a></li>"; }
+						echo"<li><a href=\"logout.php\">Log out</a></li>";
+					} else {
+						echo "<li><a href=\"register.php\">Register</a></li>
+							<li><a href=\"login.php\">Log in</a></li>";
+					}
+				?>
 			</ul>
 		</nav>
 
@@ -46,42 +55,45 @@
 					if ($conn->connect_error) {
 						die("Error: Couldn't connect." . $conn -> connect_error);
 					}
-					session_start();
 
 					if (isset($_SESSION["student_id"])) {
 						$student_id = $_SESSION['student_id'];
+
+						$sql = "SELECT * FROM users_posts ORDER BY post_date DESC LIMIT 10";
+	
+						$statement = $conn -> prepare($sql);
+						$statement -> execute();
+						$result = $statement -> get_result();
+						$statement -> close();
+	
+						echo "<div id='posts_section'>";
+						if ($result->num_rows > 0) {
+							while($row = $result->fetch_assoc()) {
+								echo "<details open>
+									<summary>Post " . $row["post_id"] . "</summary>
+								<p>" .  $row["new_post"]. "</p>
+							</details>";
+							}
+						}
+						echo  "</div>";
+
+						if (isset($_POST["submit"])) {
+							$new_post = $_POST["new_post"];
+	
+							$sql = "INSERT INTO users_posts (student_id, new_post) VALUES (?, ?)";
+	
+							$statement = $conn -> prepare($sql);
+							$statement -> bind_param('is', $student_id, $new_post);
+							$statement -> execute();
+							$statement -> close();
+
+							echo "<strong>Student post created successfully!!!</strong><br />";
+						}
 					} else {
-						header("Location: register.php");
+						header("Location: login.php");
 						$conn -> close();
 						exit();
 					}
-
-					if (isset($_POST["submit"])) {
-						$new_post = $_POST["new_post"];
-
-						$sql = "INSERT INTO users_posts (student_id, new_post) VALUES ('$student_id', '$new_post')";
-
-						if ($conn->query($sql) === TRUE) {
-							echo "<strong>Student post created successfully!!!</strong><br />";
-						} else {
-							echo "Error: An error occured!!!<br />" . $conn->error;
-						}
-					}
-
-					$sql = "SELECT * FROM users_posts WHERE student_id = '$student_id' ORDER BY post_date DESC LIMIT 5";
-
-					$result = $conn->query($sql);
-
-					echo "<div id='posts_section'>";
-					if ($result->num_rows > 0) {
-						while($row = $result->fetch_assoc()) {
-							echo "<details open>
-								<summary>Post " . $row["post_id"] . "</summary>
-							<p>" .  $row["new_post"]. "</p>
-						</details>";
-						}
-					}
-					echo  "</div>";
 				
 					$conn -> close();
 				?>
@@ -89,15 +101,61 @@
 		</main>
 
 		<div id="user_info">
-			<p>Osamudiamen Nwoko</p><br />
+			<?php
+				require_once ('connection.php');
+				$conn = new mysqli($server_name, $username,  $password, $database_name);
 
-			<p><img src="images/img_avatar1.png" alt="User Image" /></p><br />
+				if ($conn->connect_error) {
+					die("Error: Couldn't connect." . $conn -> connect_error);
+				}
 
-			<p>Email:</p>
-			<p><a href="mailto:osamudiamennwoko@cmail.carleton.ca">osamudiamennwoko@<br />cmail.carleton.ca</a></p><br />
+				if (isset($_SESSION["student_id"])) {
+					$sql = "SELECT * FROM users_info WHERE student_id = ?";
+					$statement = $conn -> prepare($sql);
+					$statement -> bind_param('i', $student_id);
+					$statement -> execute();
+					$result = $statement -> get_result();
+					$statement -> close();
+					$row = $result -> fetch_assoc();
 
-			<p>Program: </p>
-			<p>Software Engineering</p>
+					$first_name = $row["first_name"];
+					$last_name = $row["last_name"];
+					$dob = $row["dob"];
+					$student_email = $row["student_email"];
+
+					$sql = "SELECT * FROM users_program WHERE student_id = ?";
+					$statement = $conn -> prepare($sql);
+					$statement -> bind_param('i', $student_id);
+					$statement -> execute();
+					$result = $statement -> get_result();
+					$statement -> close();
+					$row = $result -> fetch_assoc();
+
+					$program = $row["program"];
+
+					$sql = "SELECT * FROM users_avatar WHERE student_id = ?";
+					$statement = $conn -> prepare($sql);
+					$statement -> bind_param('i', $student_id);
+					$statement -> execute();
+					$result = $statement -> get_result();
+					$statement -> close();
+					$row = $result -> fetch_assoc();
+
+					$avatar = $row["avatar"];
+					
+					echo "
+						<p>" . $first_name . " " . $last_name . "</p><br />
+
+						<p><img src=\"images/img_avatar" . $avatar . ".png\" alt=\"User Image\" /></p><br />
+			
+						<p>Email:</p>
+						<p><a href=\"mailto:" . $student_email ."\">" . $student_email . "</a></p><br />
+			
+						<p>Program: </p>
+						<p>" . $program . "</p>
+					";
+				}
+			?>
 		</div>
 	</div>
 </body>

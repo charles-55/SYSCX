@@ -18,9 +18,18 @@
 		<nav>
 			<ul>
 				<li><a href="index.php">Home</a></li>
-				<li id="selected_page"><a href="profile.php">Profile</a></li>
-				<li><a href="register.php">Register</a></li>
-				<li><a href="#">Log out</a></li>
+				<?php
+					session_start();
+					
+					if (isset($_SESSION["student_id"])) {
+						echo "<li id=\"selected_page\"><a href=\"profile.php\">Profile</a></li>";
+						if ($_SESSION["account_type"] === 0) { echo "<li><a href=\"user_list.php\">User List</a></li>"; }
+						echo"<li><a href=\"logout.php\">Log out</a></li>";
+					} else {
+						echo "<li><a href=\"register.php\">Register</a></li>
+							<li><a href=\"login.php\">Log in</a></li>";
+					}
+				?>
 			</ul>
 		</nav>
 
@@ -136,48 +145,62 @@
 					if ($conn->connect_error) {
 						echo "Error: Couldn't connect to database.";
 					} else {
-						session_start();
+						if (isset($_SESSION["student_id"])) {
+							$student_id = $_SESSION['student_id'];
 
-						if (isset($_POST["register"])) {
-							$first_name = $_POST["first_name"];
-							$last_name = $_POST["last_name"];
-							$dob = $_POST["DOB"];
-							
-							$street_number = 0;
-							$street_name = "";
-							$city = "";
-							$province = "";
-							$postal_code = "";
+							$sql = "SELECT * FROM users_info WHERE student_id = ?";
+							$statement = $conn -> prepare($sql);
+							$statement -> bind_param('i', $student_id);
+							$statement -> execute();
+							$result = $statement -> get_result();
+							$statement -> close();
+							$row = $result -> fetch_assoc();
 
-							$student_email = $_POST["student_email"];
-							$program = $_POST["program"];
-							$avatar = 0;
+							$first_name = $row["first_name"];
+							$last_name = $row["last_name"];
+							$dob = $row["dob"];
+							$student_email = $row["student_email"];
 
-							$sql = "INSERT INTO users_info (first_name, last_name, dob, student_email) VALUES ('$first_name', '$last_name', '$dob', '$student_email')";
+							$sql = "SELECT * FROM users_address WHERE student_id = ?";
+							$statement = $conn -> prepare($sql);
+							$statement -> bind_param('i', $student_id);
+							$statement -> execute();
+							$result = $statement -> get_result();
+							$statement -> close();
+							$row = $result -> fetch_assoc();
 
-							if ($conn->query($sql) === TRUE) {
-								$sql = "SELECT LAST_INSERT_ID() AS student_id";
-								$result = $conn->query($sql);
-								$student_id = ($result->fetch_assoc())["student_id"];
-								$_SESSION["student_id"] = $student_id;
+							$street_number = $row["street_number"];
+							$street_name = $row["street_name"];
+							$city = $row["city"];
+							$province = $row["province"];
+							$postal_code = $row["postal_code"];
 
-								$sql1 = "INSERT INTO users_address (student_id, street_number, street_name, city, province, postal_code) VALUES ('$student_id', 0, NULL, NULL, NULL, NULL)";
+							$sql = "SELECT * FROM users_program WHERE student_id = ?";
+							$statement = $conn -> prepare($sql);
+							$statement -> bind_param('i', $student_id);
+							$statement -> execute();
+							$result = $statement -> get_result();
+							$statement -> close();
+							$row = $result -> fetch_assoc();
 
-								$sql2 = "INSERT INTO users_program (student_id, program) VALUES ('$student_id', '$program')";
-								
-								$sql3 = "INSERT INTO users_avatar (student_id, avatar) VALUES ('$student_id', 0)";
+							$program = $row["program"];
 
-								$result1 = $conn->query($sql1);
-								$result2 = $conn->query($sql2);
-								$result3 = $conn->query($sql3);
+							$sql = "SELECT * FROM users_avatar WHERE student_id = ?";
+							$statement = $conn -> prepare($sql);
+							$statement -> bind_param('i', $student_id);
+							$statement -> execute();
+							$result = $statement -> get_result();
+							$statement -> close();
+							$row = $result -> fetch_assoc();
 
-								if ($result1 === $result2 && $result2 === $result3) {
-									echo "<strong>Student record created successfully!!!</strong><br />";
-								}
-							} else {
-								echo "Error: " . $sql . "<br />" . $conn->error;
-							}
-						} else if (isset($_POST["profile"])) {
+							$avatar = $row["avatar"];
+						} else {
+							header("Location: login.php");
+							$conn -> close();
+							exit();
+						}
+
+						if (isset($_POST["profile"])) {
 							$first_name = $_POST["first_name"];
 							$last_name = $_POST["last_name"];
 							$dob = $_POST["DOB"];
@@ -192,24 +215,35 @@
 							$program = $_POST["program"];
 							$avatar = $_POST["avatar"];
 
-							$sql1 = "UPDATE users_info SET first_name = '$first_name', last_name = '$last_name', dob = '$dob', student_email = '$student_email' WHERE student_id = '$student_id'";
+							$sql1 = "UPDATE users_info SET first_name = ?, last_name = ?, dob = ?, student_email = ? WHERE student_id = ?";
 
-							$sql2 = "UPDATE users_address SET street_number = '$street_number', street_name = '$street_name', city = '$city', province = '$province', postal_code = '$postal_code' WHERE student_id = '$student_id'";
+							$sql2 = "UPDATE users_address SET street_number = ?, street_name = ?, city = ?, province = ?, postal_code = ? WHERE student_id = ?";
 							
-							$sql3 = "UPDATE users_avatar SET avatar = '$avatar' WHERE student_id = '$student_id'";
+							$sql3 = "UPDATE users_avatar SET avatar = ? WHERE student_id = ?";
 
-							$sql4 = "UPDATE users_program SET program = '$program' WHERE student_id = '$student_id'";
+							$sql4 = "UPDATE users_program SET program = ? WHERE student_id = ?";
 
-							$result1 = $conn->query($sql1);
-							$result2 = $conn->query($sql2);
-							$result3 = $conn->query($sql3);
-							$result4 = $conn->query($sql4);
+							$statement1 = $conn -> prepare($sql1);
+							$statement2 = $conn -> prepare($sql2);
+							$statement3 = $conn -> prepare($sql3);
+							$statement4 = $conn -> prepare($sql4);
 
-							if ($result1 === $result2 && $result2 === $result3 && $result3 === $result4 && $result4 === TRUE) {
-								echo "<strong>Student record updated successfully!!!</strong><br />";
-							} else {
-								echo "Error: An error occured!!!<br />" . $conn->error;
-							}
+							$statement1 -> bind_param('ssssi', $first_name, $last_name, $dob, $student_email, $student_id);
+							$statement2 -> bind_param('issssi', $street_number, $street_name, $city, $province, $postal_code, $student_id);
+							$statement3 -> bind_param('ii', $avatar, $student_id);
+							$statement4 -> bind_param('si', $program, $student_id);
+
+							$statement1 -> execute();
+							$statement2 -> execute();
+							$statement3 -> execute();
+							$statement4 -> execute();
+
+							$statement1 -> close();
+							$statement2 -> close();
+							$statement3 -> close();
+							$statement4 -> close();
+
+							echo "<strong>Student record updated successfully!!!</strong><br />";
 						}
 						
 						$conn -> close();
@@ -260,15 +294,21 @@
 		</main>
 
 		<div id="user_info">
-			<p>Osamudiamen Nwoko</p><br />
+			<?php
+				if (isset($_SESSION["student_id"])) {
+					echo "
+						<p>" . $first_name . " " . $last_name . "</p><br />
 
-			<p><img src="images/img_avatar1.png" alt="User Image" /></p><br />
-
-			<p>Email:</p>
-			<p><a href="mailto:osamudiamennwoko@cmail.carleton.ca">osamudiamennwoko@<br />cmail.carleton.ca</a></p><br />
-
-			<p>Program: </p>
-			<p>Software Engineering</p>
+						<p><img src=\"images/img_avatar" . $avatar . ".png\" alt=\"User Image\" /></p><br />
+			
+						<p>Email:</p>
+						<p><a href=\"mailto:" . $student_email ."\">" . $student_email . "</a></p><br />
+			
+						<p>Program: </p>
+						<p>" . $program . "</p>
+					";
+				}
+			?>
 		</div>
 	</div>
 </body>

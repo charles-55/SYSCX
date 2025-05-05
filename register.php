@@ -17,9 +17,9 @@
 	<div id="content">
 		<nav>
 			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><a href="profile.html">Profile</a></li>
-				<li id="selected_page"><a href="register.html">Register</a></li>
+				<li><a href="index.php">Home</a></li>
+				<li><a href="profile.php">Profile</a></li>
+				<li id="selected_page"><a href="register.php">Register</a></li>
 				<li><a href="#">Log out</a></li>
 			</ul>
 		</nav>
@@ -27,7 +27,8 @@
 		<main>
 			<section>
 				<h2>Register a new profile</h2>
-				<form method="POST" action="https://ramisabouni.com/sysc4504/process_register.php">
+				<!-- https://ramisabouni.com/sysc4504/process_register.php -->
+				<form method="POST" action="profile.php">
 					<fieldset>
 						<legend><span>Personal information</span></legend>
 						<table>
@@ -73,7 +74,7 @@
 							</tr>
 							<tr>
 								<td>
-									<input type="submit" value="Register" />
+									<input type="submit" name="register" value="Register" />
 									<input type="reset" value="Reset" />
 								</td>
 							</tr>
